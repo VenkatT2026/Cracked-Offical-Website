@@ -1,0 +1,169 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  password  String
+  role      UserRole @default(STUDENT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Student-specific fields
+  currentScore    Int? @default(0)
+  targetScore     Int?
+  studyStreak     Int? @default(0)
+  lastStudyDate   DateTime?
+  
+  // Teacher-specific fields
+  schoolName      String?
+  subject         String?
+  
+  // Relations
+  progress        Progress[]
+  bookmarks       Bookmark[]
+  quizzes         Quiz[]        // For teachers who create quizzes
+  quizAttempts    QuizAttempt[]
+  
+  @@map("users")
+}
+
+model Quiz {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  section     SATSection
+  difficulty  Difficulty
+  timeLimit   Int?     // in minutes
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+  questions   Question[]
+  attempts    QuizAttempt[]
+  
+  @@map("quizzes")
+}
+
+model Question {
+  id          String   @id @default(cuid())
+  text        String
+  type        QuestionType
+  correctAnswer String
+  options     String?  // JSON string for multiple choice
+  explanation String?
+  topic       String
+  difficulty  Difficulty
+  createdAt   DateTime @default(now())
+  
+  // Relations
+  quizId      String
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  bookmarks   Bookmark[]
+  answers     Answer[]
+  
+  @@map("questions")
+}
+
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  score     Int
+  timeSpent Int      // in seconds
+  completed Boolean  @default(false)
+  startedAt DateTime @default(now())
+  completedAt DateTime?
+  
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizId    String
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  answers   Answer[]
+  
+  @@map("quiz_attempts")
+}
+
+model Answer {
+  id        String   @id @default(cuid())
+  answer    String
+  isCorrect Boolean
+  timeSpent Int      // in seconds
+  
+  // Relations
+  questionId String
+  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  attemptId  String
+  attempt    QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  
+  @@map("answers")
+}
+
+model Progress {
+  id        String   @id @default(cuid())
+  section   SATSection
+  score     Int
+  questionsAnswered Int
+  questionsCorrect  Int
+  date      DateTime @default(now())
+  
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("progress")
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  
+  // Relations
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questionId String
+  question  Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, questionId])
+  @@map("bookmarks")
+}
+
+enum UserRole {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+enum SATSection {
+  READING
+  WRITING
+  MATH_NO_CALCULATOR
+  MATH_CALCULATOR
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  GRID_IN
+  ESSAY
+}
