@@ -1,0 +1,39 @@
+{
+  "name": "crackd-offical-website",
+  "version": "1.0.0",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VenkatT2026/Cracked-Offical-Website.git"
+  },
+  "keywords": [
+    "sat-prep",
+    "education",
+    "mongodb",
+    "express",
+    "nodejs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VenkatT2026/Cracked-Offical-Website/issues"
+  },
+  "homepage": "https://github.com/VenkatT2026/Cracked-Offical-Website#readme",
+  "description": "Official website for Crackd SAT preparation services with MongoDB database integration",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^17.0.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.16.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

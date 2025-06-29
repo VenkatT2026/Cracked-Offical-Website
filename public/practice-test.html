@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practice Test Mode - Crackd</title>
+  <link rel="stylesheet" href="practice-test.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+</head>
+<body>
+  <!-- Test Header -->
+  <header class="test-header">
+    <div class="header-content">
+      <div class="test-info">
+        <h1>SAT Practice Test</h1>
+        <div class="test-progress">
+          <span id="currentQuestion">1</span> of <span id="totalQuestions">98</span>
+        </div>
+      </div>
+      <div class="test-controls">
+        <div class="timer" id="timer">
+          <i class="fas fa-clock"></i>
+          <span id="timeRemaining">03:00:00</span>
+        </div>
+        <button class="btn btn-secondary" id="pauseBtn">
+          <i class="fas fa-pause"></i> Pause
+        </button>
+        <button class="btn btn-primary" id="submitBtn" style="display: none;">
+          <i class="fas fa-check"></i> Submit Test
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Test Container -->
+  <main class="test-container">
+    <!-- Question Navigation -->
+    <aside class="question-nav">
+      <div class="nav-header">
+        <h3>Question Navigator</h3>
+        <div class="module-indicator" id="moduleIndicator">
+          <span class="module-badge english">English 1</span>
+        </div>
+      </div>
+      
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      
+      <div class="question-grid" id="questionGrid">
+        <!-- Questions will be populated by JavaScript -->
+      </div>
+      
+      <div class="nav-legend">
+        <div class="legend-item">
+          <span class="legend-dot answered"></span>
+          <span>Answered</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot current"></span>
+          <span>Current</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-dot unanswered"></span>
+          <span>Unanswered</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Question Content -->
+    <section class="question-content">
+      <div class="question-header">
+        <div class="question-number">
+          Question <span id="questionNumber">1</span>
+        </div>
+        <div class="question-type" id="questionType">
+          Multiple Choice
+        </div>
+      </div>
+
+      <!-- Reading Passage (if applicable) -->
+      <div class="reading-passage" id="readingPassage" style="display: none;">
+        <h3>Reading Passage</h3>
+        <div class="passage-content" id="passageContent">
+          <!-- Passage content will be populated -->
+        </div>
+      </div>
+
+      <!-- Question Text -->
+      <div class="question-text">
+        <p id="questionText">
+          <!-- Question text will be populated -->
+        </p>
+      </div>
+
+      <!-- Answer Options -->
+      <div class="answer-options" id="answerOptions">
+        <!-- Options will be populated by JavaScript -->
+      </div>
+
+      <!-- Question Navigation -->
+      <div class="question-navigation">
+        <button class="btn btn-secondary" id="prevBtn" disabled>
+          <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <button class="btn btn-primary" id="nextBtn">
+          Next <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Pause Modal -->
+  <div class="modal" id="pauseModal">
+    <div class="modal-content">
+      <h2>Test Paused</h2>
+      <p>Your test has been paused. You can resume when you're ready.</p>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="resumeBtn">
+          <i class="fas fa-play"></i> Resume Test
+        </button>
+        <button class="btn btn-danger" id="exitBtn">
+          <i class="fas fa-times"></i> Exit Test
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Modal -->
+  <div class="modal" id="resultsModal">
+    <div class="modal-content results-content">
+      <h2>Test Complete!</h2>
+      <div class="results-summary">
+        <div class="score-section">
+          <h3>Your Score</h3>
+          <div class="score-display">
+            <div class="overall-score">
+              <span class="score-number" id="overallScore">0</span>
+              <span class="score-label">Overall</span>
+            </div>
+            <div class="section-scores">
+              <div class="section-score">
+                <span class="section-name">English</span>
+                <span class="section-percentage" id="englishScore">0%</span>
+              </div>
+              <div class="section-score">
+                <span class="section-name">Math</span>
+                <span class="section-percentage" id="mathScore">0%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="test-stats">
+          <div class="stat-item">
+            <span class="stat-label">Time Taken</span>
+            <span class="stat-value" id="timeTaken">0 min</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Questions Answered</span>
+            <span class="stat-value" id="questionsAnswered">0/98</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Estimated SAT Score</span>
+            <span class="stat-value" id="estimatedScore">0</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="results-actions">
+        <button class="btn btn-primary" id="reviewBtn">
+          <i class="fas fa-eye"></i> Review Answers
+        </button>
+        <button class="btn btn-secondary" id="newTestBtn">
+          <i class="fas fa-plus"></i> Start New Test
+        </button>
+        <button class="btn btn-secondary" id="homeBtn">
+          <i class="fas fa-home"></i> Back to Home
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Loading test...</p>
+    </div>
+  </div>
+
+  <script src="practice-test.js"></script>
+</body>
+</html> 
